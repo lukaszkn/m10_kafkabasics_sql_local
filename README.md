@@ -1,5 +1,7 @@
 # Clickstream Demo with Confluent Platform, ksqlDB, and Elasticsearch
 
+## [Screenshots from execution are emdedded in this README (stored in `screenshots` folder)](screenshots/)
+
 ![image](.img/clickstream_demo_flow.png)
 
 # Overview
@@ -13,89 +15,16 @@ Visualisation of the results is provided by Grafana, on top of data streamed to 
 
 You can find the documentation for running this example and its accompanying tutorial at [https://docs.confluent.io/platform/current/tutorials/examples/clickstream/docs/index.html](https://docs.confluent.io/platform/current/tutorials/examples/clickstream/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clickstream)
 
-## Prerequisites
-
-📘 Follow the full setup instructions for [Windows environment setup](./setup-windows.md)<br>
-🍎 Follow the full setup instructions for [MacOS environment setup](./setup-macos.md)<br>
-🐧 Follow the full setup instructions for [Ubuntu 24.10 environment setup](./setup-ubuntu.md)
-
-Before proceeding, ensure you have the following:
-
-- Rancher Desktop – Required for running conatainers locally (alternative to Docker Desktop). ***Please keep it running***.
-- macOS (tested with M1/M2/M3 chip) OR Windows + WSL
-- Docker memory is allocated minimally at 6-8 GB.
-- `vm.max_map_count` system setting:
-
-    <details>
-    <summary><code>Linux</code>, <code>Windows - [WSL]</code> (<i>click to expand</i>)</summary>
-
-    ```bash
-    sudo sysctl -w vm.max_map_count=262144
-    ```
-
-    </details>
-    <details>
-    <summary><code>macOS</code> with <code>M1/M2/M3</code> <code>&lt;with Rancher-Desktop&gt;</code>  (<i>click to expand</i>)</summary>
-
-    ```bash
-    rdctl shell
-    ```
-
-    then
-
-    ```bash
-    sudo sysctl -w vm.max_map_count=262144
-    ```
-
-    then
-
-    ```bash
-    exit 
-    ```
-
-    </details>
-
-    </details>
-
 ## Start Up
 
 Clone the git project.
-
-<details>
-<summary><code>Windows - [WSL]</code> (<i>click to expand</i>)</summary>
-
-For Windows users (with WSL enabled):
-
-1. Open Command Prompt or Windows Terminal.  
-2. Start your WSL environment (Ubuntu) by running:
-
-```bash
-wsl -d ubuntu
-```
-
-3. Once inside WSL, navigate to the desired directory and clone the project:
-
-```bash
-git clone https://git.epam.com/epmc-bdcc/trainings/bd201/m10_kafkabasics_sql_local.git
-```
-
-4. Move to the project folder:
-
-```bash
-cd m10_kafkabasics_sql_local/
-```
-
-</details>
-
-<details>
-<summary><code>Linux</code>, <code>macOS</code> with <code>M1/M2/M3</code> <code>&lt;with Rancher-Desktop&gt;</code> (<i>click to expand</i>)</summary>
 
 For Linux or macOS users:
 
 1. Open your terminal and navigate to the desired directory and clone the project:
 
 ```bash
-git clone https://git.epam.com/epmc-bdcc/trainings/bd201/m10_kafkabasics_sql_local.git
+git clone https://github.com/lukaszkn/m10_kafkabasics_sql_local.git
 ```
 
 2. Move to the project folder:
@@ -135,6 +64,8 @@ Launch the tutorial in Docker.
 docker-compose up -d
 ```
 
+<img src='screenshots/Screenshot 2025-09-18 at 11.32.54.png' width='850'>
+
 After a minute or so, run the docker-compose ps status command to ensure that everything has started correctly:
 
 ```bash
@@ -156,6 +87,8 @@ schema-registry   confluentinc/cp-schema-registry:7.9.0                 "/etc/co
 tools             cnfltraining/training-tools:5.4                       "/bin/bash"                tools             14 seconds ago   Up 12 seconds
 zookeeper         confluentinc/cp-zookeeper:7.9.0                       "/etc/confluent/dock…"     zookeeper         14 seconds ago   Up 12 seconds   2181/tcp, 2888/tcp, 3888/tcp
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.41.21.png' width='850'>
+
 
 please ensure that the `STATUS` is `UP`. Wait 2-3 min, then proceed with the next steps.
 
@@ -184,6 +117,7 @@ The output should look similar to:
  ksql-clusterksql_processing_log | 1          | 1
 -------------------------------------------------------------------
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.42.35.png' width='850'>
 
 3. Run the script `create-connectors.sql` that executes the ksqlDB statements to create three source connectors for generating mock data.
 
@@ -208,6 +142,7 @@ CREATE SOURCE CONNECTOR datagen_clickstream_codes WITH (
 ---------------------------------------------
 [...]
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.43.14.png' width='850'>
 
 4. Now the `clickstream` generator is running, simulating the stream of clicks. Sample the messages in the clickstream topic:
 
@@ -225,6 +160,7 @@ Your output should resemble:
  rowtime: 2020/06/11 10:38:42.705 Z, key: 122.152.45.245, value: {"ip":"122.152.45.245","userid":11,"remote_user":"-","time":"21","_time":21,"request":"GET /images/logo-small.png HTTP/1.1","status":"407","bytes":"4196","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
  Topic printing ceased
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.43.52.png' width='850'>
 
 5. The second data generator running is for the HTTP status codes. Sample the messages in the `clickstream_codes` topic:
 
@@ -242,6 +178,7 @@ Your output should resemble:
  rowtime: 2020/06/11 10:38:41.006 Z, key: 200, value: {"code":200,"definition":"Successful"}
  Topic printing ceased
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.44.22.png' width='850'>
 
 6. The third data generator is for the user information. Sample the messages in the `clickstream_users` topic:
 
@@ -259,6 +196,7 @@ Your output should resemble:
  rowtime: 2020/06/11 10:38:41.214 Z, key: 3, value: {"user_id":3,"username":"akatz1022","registered_at":1483293331831,"first_name":"Oriana","last_name":"Romagosa","city":"London","level":"Platinum"}
  Topic printing ceased
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.44.40.png' width='850'>
 
 7. Go to Confluent Control Center (Legacy) UI at [http://localhost:9021](http://localhost:9021) and view the three kafka-connect-datagen source connectors created with the ksqlDB CLI.
 ![image](.img/c3_datagen_connectors.png)
@@ -295,6 +233,7 @@ The output will show either a blank message, or Executing statement, similar to 
 ----------------
 [...]
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.47.52.png' width='850'>
 
 After the `RUN SCRIPT` command completes, exit out of the `ksqldb-cli` with a `CTRL+D` command:
 
@@ -305,6 +244,8 @@ After the `RUN SCRIPT` command completes, exit out of the `ksqldb-cli` with a `C
 
 2. Verify that data is being streamed through various tables and streams. Query one of the streams `CLICKSTREAM`:
 ![image](.img/stream_clickstream.png)
+
+<img src='screenshots/Screenshot 2025-09-18 at 11.50.21.png' width='850'>
 
 # Load the Clickstream Data in Grafana
 
@@ -340,6 +281,7 @@ Charting  CLICK_USER_SESSIONS
 
 [...]
 ```
+<img src='screenshots/Screenshot 2025-09-18 at 11.51.16.png' width='850'>
 
 3. Load the dashboard into `Grafana`.
 
@@ -356,8 +298,12 @@ Loading Grafana ClickStream Dashboard
 4. Navigate to the Grafana dashboard at [http://localhost:3000](http://localhost:3000). Enter the username and password as `user` and `user`. Then navigate to the `Clickstream Analysis Dashboard`.
 ![image](.img/grafana-dashboard.png)
 
-5. In the Confluent Control Center (Legacy) UI at [http://localhost:9021](http://localhost:9021), again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+<img src='screenshots/Screenshot 2025-09-18 at 11.53.30.png' width='850'>
+
+6. In the Confluent Control Center (Legacy) UI at [http://localhost:9021](http://localhost:9021), again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
 ![image](.img/c3_connectors.png)
+
+<img src='screenshots/Screenshot 2025-09-18 at 11.54.37.png' width='850'>
 
 # Sessionize the data
 
@@ -377,6 +323,8 @@ To generate the session data execute the following statement from the `root` git
 
 The script will issue some statements to the console about where it is in the process.
 
+<img src='screenshots/Screenshot 2025-09-18 at 12.11.28.png' width='850'>
+
 # View the data in Grafana
 
 Navigate to the Grafana dashboard at [http://localhost:3000](http://localhost:3000). Enter the username and password as `user` and `user`. Then navigate to the `Clickstream Analysis Dashboard`.
@@ -392,4 +340,4 @@ Once you complete your learning path in this wonderful journey, don’t forget t
 ```bash
 docker-compose down --remove-orphans
 ```
-
+<img src='screenshots/Screenshot 2025-09-18 at 12.14.08.png' width='850'>
